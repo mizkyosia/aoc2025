@@ -1,32 +1,8 @@
-use regex::Regex;
-
 use crate::Solution;
+use crate::transform::Transform;
 
 pub fn solve(input: String) -> Solution {
-    let regex = Regex::new(r"([LR])([0-9]+)").unwrap();
-
-    let mut dial = 50; // We just need a number congruent to 50 mod 100
-    let mut res1 = 0;
-    let mut res2 = 0;
-    let mut prev_dial: i64 = 50;
-
-    for m in regex.captures_iter(&input) {
-        let n: i64 = m[2].parse().unwrap();
-
-        match &m[1] {
-            "L" => dial -= n,
-            "R" => dial += n,
-            _ => unreachable!(),
-        }
-
-        if dial.rem_euclid(100) == 0 {
-            res1 += 1;
-        }
-
-        res2 += (prev_dial / 100 - dial / 100).abs();
-
-        prev_dial = dial;
-    }
+    let (res1, res2, _) = input.split('\n').map(|l| l.split_at(1).transform(|(s, n)| (match *s{"R"=>1,"L"=>-1,_=>0}) * n.parse::<i64>().unwrap() )).fold((0,0, 50), |(a, b, d), n| (a + if (d + n).rem_euclid(100) == 0 { 1 } else { 0 }, b + ((d + n)/100 + d/100).abs(), d + n));
 
     Solution(res1.to_string(), res2.to_string())
 }

@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 use crate::Solution;
 
@@ -37,7 +37,7 @@ pub fn solve(input: String) -> Solution {
                     if let Some((_, true)) = (0..((n / d) as u32))
                         .map(|j| {
                             let exp_lo = 10i64.pow(d as u32 * j);
-                            let exp_hi = 10i64.pow(d as u32 * (j+1));
+                            let exp_hi = 10i64.pow(d as u32 * (j + 1));
 
                             //  println!("      {exp_lo}, {exp_hi}, {}", (i % exp_hi) / exp_lo);
 

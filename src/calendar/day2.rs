@@ -1,10 +1,16 @@
 use std::collections::HashSet;
 
+use fancy_regex::Regex;
+
 use crate::Solution;
 
 pub fn solve(input: String) -> Solution {
+    let reg = Regex::new(r"^(\d+)\1+$").unwrap();
+
     let mut set: HashSet<i64> = HashSet::new();
     let mut set_2: HashSet<i64> = HashSet::new();
+
+    let mut sum = 0;
 
     input.split(',').for_each(|l| {
         let tmp = l
@@ -26,31 +32,34 @@ pub fn solve(input: String) -> Solution {
             // Part 1
             if a == b {
                 set.insert(i);
+            }
+
+            // // Part 2
+
+            let text = i.to_string();
+            if let Ok(true) = reg.is_match(&text) {
                 set_2.insert(i);
+                sum += i;
             }
 
-            // Part 2
-            for d in 1..n {
-                // Check if d is divisor of n
-                if n % d == 0 {
-                    //  println!("  {n} : {d}");
-                    if let Some((_, true)) = (0..((n / d) as u32))
-                        .map(|j| {
-                            let exp_lo = 10i64.pow(d as u32 * j);
-                            let exp_hi = 10i64.pow(d as u32 * (j + 1));
-
-                            //  println!("      {exp_lo}, {exp_hi}, {}", (i % exp_hi) / exp_lo);
-
-                            ((i % exp_hi) / exp_lo, true)
-                        })
-                        .reduce(|(acc_n, v), (n, _)| (acc_n, acc_n == n && v))
-                    {
-                        set_2.insert(i);
-                        // println!(":3");
-                        break;
-                    }
-                }
-            }
+            // for d in 1..n {
+            //     // Check if d is divisor of n
+            //     if n % d == 0 {
+            //         if let Some((_, true)) = (0..((n / d) as u32))
+            //             .map(|j| {
+            //                 let exp_lo = 10i64.pow(d as u32 * j);
+            //                 let exp_hi = 10i64.pow(d as u32 * (j + 1));
+            //                 //  println!("      {exp_lo}, {exp_hi}, {}", (i % exp_hi) / exp_lo);
+            //                 ((i % exp_hi) / exp_lo, true)
+            //             })
+            //             .reduce(|(acc_n, v), (n, _)| (acc_n, acc_n == n && v))
+            //         {
+            //             set_2.insert(i);
+            //             // println!(":3");
+            //             break;
+            //         }
+            //     }
+            // }
         }
     });
 
